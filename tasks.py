@@ -25,7 +25,7 @@ def process_images_task(request_id):
 
         for url in input_urls:
             try:
-                # 🔹 Download image
+                # Download image
                 response = requests.get(url.strip(), stream=True)
                 response.raise_for_status()
 
@@ -36,7 +36,7 @@ def process_images_task(request_id):
                 if img is None:
                     raise ValueError(f"Failed to decode image from URL: {url}")
 
-                # 🔹 Extract filename and ensure a valid extension
+                # Extract filename and ensure a valid extension
                 parsed_url = urlparse(url)
                 filename = os.path.basename(parsed_url.path)
                 filename = unquote(filename)  # Decode URL encoding
@@ -52,7 +52,7 @@ def process_images_task(request_id):
                 output_filename = f"{base_name}_compressed_{timestamp}{ext}"
                 output_path = os.path.join("static", "compressed_images", output_filename)
 
-                # 🔹 Save compressed image (reduce quality only)
+                # Save compressed image (reduce quality only)
                 if ext in [".jpg", ".jpeg"]:
                     cv2.imwrite(output_path, img, [cv2.IMWRITE_JPEG_QUALITY, 50])
                 elif ext == ".png":
@@ -60,7 +60,7 @@ def process_images_task(request_id):
                 else:
                     cv2.imwrite(output_path, img)
 
-                # 🔹 Store public URL
+                # Store public URL
                 image_url = f"http://localhost:5000/static/compressed_images/{output_filename}"
                 output_urls.append(image_url)
 

@@ -6,13 +6,13 @@ def check_database():
     cursor = conn.cursor()
 
     # Check Requests Table
-    print("\n📌 Requests Table:")
+    print("\n Requests Table:")
     cursor.execute("SELECT * FROM requests")
     for row in cursor.fetchall():
         print(row)
 
     # Check Products Table
-    print("\n📌 Products Table:")
+    print("\n Products Table:")
     cursor.execute("SELECT * FROM products")
     for row in cursor.fetchall():
         print(row)
