@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSV Upload</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Upload CSV</h1>
+    <form id="uploadForm" enctype="multipart/form-data">
+        <input type="file" name="file" accept=".csv" required>
+        <button type="submit">Upload</button>
+    </form>
+
+    <h2>Check Status</h2>
+    <form id="statusForm">
+        <input type="text" name="request_id" placeholder="Enter Request ID" required>
+        <button type="submit">Check Status</button>
+    </form>
+
+    <div id="result"></div>
+
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData();
+            formData.append('file', e.target.file.files[0]);
+
+            const response = await fetch('/upload', {
+                method: 'POST',
+                body: formData
+            });
+            const data = await response.json();
+            if (response.ok) {
+                document.getElementById('result').innerText = `Request ID: ${data.request_id}`;
+            } else {
+                document.getElementById('result').innerText = `Error: ${data.error}`;
+            }
+        });
+
+        document.getElementById('statusForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const request_id = e.target.request_id.value;
+
+            const response = await fetch(`/status/${request_id}`);
+            const data = await response.json();
+            if (response.ok) {
+                document.getElementById('result').innerText = `Status: ${data.status}`;
+            } else {
+                document.getElementById('result').innerText = `Error: ${data.error}`;
+            }
+        });
+    </script>
+</body>
+</html>
